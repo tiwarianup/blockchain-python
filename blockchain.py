@@ -34,38 +34,47 @@ class Blockchain:
         self.chain.append(newBlock)
         return newBlock
     
-    
+    #Method to return the last block of the blockchain instance
     def getPrevBlock(self):
         return self.chain[-1]
     
-    
+    #Method for the proofofWork algorithm
     def proofofWork(self, prevProof):
         newProof = 1
         validProof = False
         while validProof is False:
+            #Problem to solve by the miner
             proofHash = hashlib.sha256(str(newProof**2 - prevProof**2).encode()).hexdigest()
+            #Check if the first four digits are equal to `0`
             if proofHash[:4] == '0000':
                 validProof = True
             else:
                 newProof += 1
         return newProof
     
+    #Method to generate sha256 hash of a block as hexadecimal number
     def blockHash(self, block):
+        #Converting dictionary to string
         encodedBlock = json.dumps(block, sort_keys = True).encode()
         return hashlib.sha256(encodedBlock).hexdigest()
     
+    #Method to check the validity of a blockchain based on conditions
     def isValidChain(self, chain):
         prevBlock = chain[0]
         blockIndex = 1
         while blockIndex < len(chain):
             block = chain[blockIndex]
-            if block['prevHash'] != self.hash(prevBlock):
+            #Checking if the hash of previous block is equal to `previous_hash` attribute
+            if block['previous_hash'] != self.hash(prevBlock):
                 return False
             prevProof = prevBlock['proof']
             proof = block['proof']
+            #Check if the hash of proof matches the condition defined
             proofHash = hashlib.sha256(str(proof**2 - prevProof**2).encode()).hexdigest()
             if proofHash[:4] != '0000':
                 return False
             prevBlock = block
             blockIndex += 1
         return True
+
+#Blockchain class ends
