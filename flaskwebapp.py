@@ -27,10 +27,16 @@ def mineBlock():
     proof     = blockchain.proofofWork(prevProof)
     prevHash  = blockchain.blockHash(prevBlock)
     #Some random data to populate in the blockchain
-    data      = {
-            'randomNumber': str(randint(1000, 9999)),
-            'randomString': ''.join(choice(string.ascii_letters) for m in range(25))
+    data      = [
+            {
+            'transactionId_1': str(randint(1000, 9999)),
+            'transactionData_1': ''.join(choice(string.ascii_letters) for m in range(35))
+            },
+            {
+            'transactionId_2': str(randint(1000, 9999)),
+            'transactionData_2': ''.join(choice(string.ascii_letters) for m in range(35))
             }
+        ]
     #Creating a block with inputs
     block     = blockchain.createBlock(proof, prevHash, data)
     #Generating a response back to user
@@ -63,6 +69,17 @@ def saveBlockchain():
         json.dump(data, outfile)
     response  = {'message': 'The blockchain was saved to JSON file'}
     #Returning the response and status code
+    return jsonify(response), 200
+
+@app.route('/validate', methods = ['GET'])
+def validateChain():
+    if blockchain.isValidChain(blockchain.chain):
+        message = 'The Blockchain is successfully validated.'
+    else:
+        message = 'The Blockchain is not a valid one.'
+    response = { 'resp' : str(blockchain.isValidChain(blockchain.chain)),
+                'message': message
+            }
     return jsonify(response), 200
 
 #Running the flask app on localhost at port 5000

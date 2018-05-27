@@ -65,7 +65,7 @@ class Blockchain:
         while blockIndex < len(chain):
             block = chain[blockIndex]
             #Checking if the hash of previous block is equal to `previous_hash` attribute
-            if block['previous_hash'] != self.hash(prevBlock):
+            if block['previous_hash'] != self.blockHash(prevBlock):
                 return False
             prevProof = prevBlock['proof']
             proof = block['proof']
